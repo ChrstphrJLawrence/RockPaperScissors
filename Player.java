@@ -6,10 +6,10 @@ public class Player {
     private boolean computer;
     private String name;
 
-    Player(String name, boolean computer) {
+    public Player(String name, boolean computer) {
         this.name = name;
         this.computer = computer;
-        this.choice = Choice.ROCK;   //TODO: maybe don't do this
+        this.choice = Choice.ROCK;
     }
 
     public String getName() {
@@ -35,7 +35,7 @@ public class Player {
             this.choice = Choice.SCISSORS;
         }
         else {
-            System.out.println("WTF");   //TODO: Handle
+            throw new IllegalArgumentException("Supported Choices: Paper, Rock, Scissors.");
         }
     }
 
@@ -49,15 +49,12 @@ public class Player {
             else if (selection == 1) {
                 this.choice = Choice.PAPER;
             }
-            else if (selection == 2) {
-                this.choice = Choice.SCISSORS;
-            }
             else {
-                System.out.println("Something went wrong."); //TODO: Improve
+                this.choice = Choice.SCISSORS;
             }
         }
         else {
-            System.out.println("Must send input to set choice for non-computer player.");  //TODO: Improve
+            throw new IllegalStateException("Must send input to set choice for non-computer player.");
         }
     }
 

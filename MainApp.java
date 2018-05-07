@@ -1,19 +1,20 @@
+import State.*;
 import processing.core.PApplet;
 import processing.core.PFont;
 
 
 public class MainApp extends PApplet {
-    PFont ladyRadical, lazer84, neon;
-    MenuState menuState;
-    GameState gameState;
-    OnePlayerState onePlayerState;
-    TwoPlayerState twoPlayerState;
-    FightState fightState;
-    Player player1;
-    Player player2;
-    Player computerPlayer;
-    static int tieMonsterPoints;
-    int counter, counter2;
+    private PFont lazer84;
+    private MenuState menuState;
+    private GameState gameState;
+    private OnePlayerState onePlayerState;
+    private TwoPlayerState twoPlayerState;
+    private FightState fightState;
+    private Player player1;
+    private Player player2;
+    private Player computerPlayer;
+    private int tieMonsterPoints;
+    private int onePlayerCounter, twoPlayerCounter;
 
     public static void main(String[] args) {
         PApplet.main("MainApp", args);
@@ -24,47 +25,45 @@ public class MainApp extends PApplet {
         size(400, 500);
     }
 
-    public void background() {
+    private void background() {
         background(255);
     }
 
-    public void pink() {
+    private void pink() {
         fill(240, 144, 192);
     }
 
-    public void brightBlue() {
+    private void brightBlue() {
         fill(24, 216, 240);
     }
 
-    public void red() {
+    private void red() {
         fill(237, 20, 92);
     }
 
     public void setup() {
         background();
-        ladyRadical = createFont("Lady Radical.ttf", 28, true);
-        lazer84 = createFont("Lazer84.ttf", 42, true);
-        neon = createFont("Neon.ttf", 28, true);
+        lazer84 = createFont("Lazer84.ttf", 62, true);
         textAlign(CENTER);
         gameState = GameState.MENU;
-        menuState = MenuState.ONEPLAYER;
+        menuState = MenuState.ONE_PLAYER;
         onePlayerState = OnePlayerState.ROCK;
         twoPlayerState = TwoPlayerState.WAIT;
-        fightState = FightState.PLAYAGAIN;
+        fightState = FightState.PLAY_AGAIN;
         player1 = new Player("Player 1", false);
         player2 = new Player("Player 2", false);
         computerPlayer = new Player("COM", true);
         computerPlayer.setChoice();
-        counter = 0;
-        counter2 = 0;
+        onePlayerCounter = 0;
+        twoPlayerCounter = 0;
     }
 
     public void draw() {
         if (gameState.equals(GameState.MENU)) {
             menuScreen();
-        } else if (gameState.equals(GameState.ONEPLAYER)) {
+        } else if (gameState.equals(GameState.ONE_PLAYER)) {
             onePlayerGame();
-        } else if (gameState.equals(GameState.TWOPLAYERS)) {
+        } else if (gameState.equals(GameState.TWO_PLAYERS)) {
             twoPlayerGame();
         } else if (gameState.equals(GameState.QUIT)) {
             exit();
@@ -79,15 +78,15 @@ public class MainApp extends PApplet {
                 onePlayerState.equals(OnePlayerState.FIGHT) || twoPlayerState.equals(TwoPlayerState.FIGHT)) {
             fightControls();
         }
-        else if (gameState.equals(GameState.ONEPLAYER)) {
+        else if (gameState.equals(GameState.ONE_PLAYER)) {
             onePlayerControls();
         }
-        else if (gameState.equals(GameState.TWOPLAYERS)) {
+        else if (gameState.equals(GameState.TWO_PLAYERS)) {
             twoPlayerControls();
         }
     }
 
-    public void menuScreen() {
+    private void menuScreen() {
         background();
         textFont(lazer84, 62);
 
@@ -103,11 +102,11 @@ public class MainApp extends PApplet {
 
 
         textFont(lazer84, 32);
-        if (menuState.equals(MenuState.ONEPLAYER)) {
+        if (menuState.equals(MenuState.ONE_PLAYER)) {
             menuButton("1 Player Game", 290, true);
             menuButton("2 Player Game", 360, false);
             menuButton("Quit", 430, false);
-        } else if (menuState.equals(MenuState.TWOPLAYERS)) {
+        } else if (menuState.equals(MenuState.TWO_PLAYERS)) {
             menuButton("1 Player Game", 290, false);
             menuButton("2 Player Game", 360, true);
             menuButton("Quit", 430, false);
@@ -119,7 +118,7 @@ public class MainApp extends PApplet {
     }
 
 
-    public void gameScreen(Player first, Player second) {
+    private void gameScreen(Player first, Player second) {
         background();
         textFont(lazer84, 100);
         textAlign(CENTER);
@@ -149,7 +148,7 @@ public class MainApp extends PApplet {
         textAlign(CENTER);
     }
 
-    public void twoPlayerGame() {
+    private void twoPlayerGame() {
         gameScreen(player1, player2);
 
         twoPlayerGameButton("ROCK", 200, true, 'Q');
@@ -190,6 +189,7 @@ public class MainApp extends PApplet {
                 brightBlue();
                 text("3", width / 2 + 20, 300);
                 break;
+
             case TWO:
                 textFont(lazer84, 82);
                 fill(0);
@@ -197,6 +197,7 @@ public class MainApp extends PApplet {
                 brightBlue();
                 text("2", width / 2 + 20, 300);
                 break;
+
             case ONE:
                 textFont(lazer84, 82);
                 fill(0);
@@ -204,32 +205,33 @@ public class MainApp extends PApplet {
                 brightBlue();
                 text("1", width / 2 + 20, 300);
                 break;
+
             case FIGHT:
                 resultScreen(player1, player2);
         }
         int speed = 60;
-        if (counter2 == 0) {
+        if (twoPlayerCounter == 0) {
             twoPlayerState = TwoPlayerState.WAIT;
         }
-        else if (counter2 < speed && counter2 > 0) {
+        else if (twoPlayerCounter < speed && twoPlayerCounter > 0) {
             twoPlayerState = TwoPlayerState.THREE;
         }
-        else if (counter2 < speed * 2) {
+        else if (twoPlayerCounter < speed * 2) {
             twoPlayerState = TwoPlayerState.TWO;
         }
-        else if (counter2 < speed * 3) {
+        else if (twoPlayerCounter < speed * 3) {
             twoPlayerState = TwoPlayerState.ONE;
         }
-        else if (counter2 < speed * 4) {
+        else if (twoPlayerCounter < speed * 4) {
             twoPlayerState = TwoPlayerState.FIGHT;
         }
         if (!twoPlayerState.equals(TwoPlayerState.WAIT) && !twoPlayerState.equals(TwoPlayerState.FIGHT)) {
-            counter2++;
+            twoPlayerCounter++;
         }
     }
 
 
-    public void onePlayerGame() {
+    private void onePlayerGame() {
         gameScreen(player1, computerPlayer);
 
         if (onePlayerState.equals(OnePlayerState.ROCK)) {
@@ -274,15 +276,15 @@ public class MainApp extends PApplet {
                 gameButton("SCISSORS", 400, true, false);
                 computerPlayer.setChoice(Choice.SCISSORS);
             }
-            if (counter > 35) {
+            if (onePlayerCounter > 35) {
                 computerPlayer.setChoice();
-                counter = 0;
+                onePlayerCounter = 0;
             }
-            counter++;
+            onePlayerCounter++;
         }
     }
 
-    public void resultScreen(Player first, Player second) {
+    private void resultScreen(Player first, Player second) {
         background();
 
         String winner = determineWinner(first, second);
@@ -348,17 +350,17 @@ public class MainApp extends PApplet {
         text(loserChoice, width - 25, 150);
 
 
-        if (fightState.equals(FightState.MAINMENU)) {
+        if (fightState.equals(FightState.MAIN_MENU)) {
             menuButton("Play Again", 350, false);
             menuButton("Main Menu", 420, true);
         }
-        else if (fightState.equals(FightState.PLAYAGAIN)) {
+        else if (fightState.equals(FightState.PLAY_AGAIN)) {
             menuButton("Play Again", 350, true);
             menuButton("Main Menu", 420, false);
         }
     }
 
-    public static String determineWinner(Player player1, Player player2) {
+    private String determineWinner(Player player1, Player player2) {
         if (player1.getChoice().equals(player2.getChoice())) {
             tieMonsterPoints++;
             return "Tie Monster";
@@ -375,39 +377,39 @@ public class MainApp extends PApplet {
         }
     }
 
-    public void menuControls() {
+    private void menuControls() {
         if (key == CODED && keyCode == UP) {
             switch (menuState) {
-                case ONEPLAYER:
+                case ONE_PLAYER:
                     menuState = MenuState.QUIT;
                     break;
-                case TWOPLAYERS:
-                    menuState = MenuState.ONEPLAYER;
+                case TWO_PLAYERS:
+                    menuState = MenuState.ONE_PLAYER;
                     break;
                 case QUIT:
-                    menuState = MenuState.TWOPLAYERS;
+                    menuState = MenuState.TWO_PLAYERS;
                     break;
             }
         }
         if (key == CODED && keyCode == DOWN) {
             switch (menuState) {
-                case ONEPLAYER:
-                    menuState = MenuState.TWOPLAYERS;
+                case ONE_PLAYER:
+                    menuState = MenuState.TWO_PLAYERS;
                     break;
-                case TWOPLAYERS:
+                case TWO_PLAYERS:
                     menuState = MenuState.QUIT;
                     break;
                 case QUIT:
-                    menuState = MenuState.ONEPLAYER;
+                    menuState = MenuState.ONE_PLAYER;
                     break;
             }
         }
 
-        if (key == CODED && keyCode == RIGHT) { //TODO WHY DOESNT THIS WORK WITH ENTER/RETURN?!?
+        if ((key == CODED && keyCode == RIGHT) || key == ENTER || key == RETURN) {
             switch(menuState) {
-                case ONEPLAYER: gameState = GameState.ONEPLAYER;
+                case ONE_PLAYER: gameState = GameState.ONE_PLAYER;
                     break;
-                case TWOPLAYERS: gameState = GameState.TWOPLAYERS;
+                case TWO_PLAYERS: gameState = GameState.TWO_PLAYERS;
                     break;
                 case QUIT: gameState = GameState.QUIT;
                     break;
@@ -415,41 +417,41 @@ public class MainApp extends PApplet {
         }
     }
 
-    public void fightControls() {
+    private void fightControls() {
         if (key == CODED && keyCode == UP || keyCode == DOWN) {
             switch (fightState) {
-                case PLAYAGAIN:
-                    fightState = FightState.MAINMENU;
+                case PLAY_AGAIN:
+                    fightState = FightState.MAIN_MENU;
                     break;
-                case MAINMENU:
-                    fightState = FightState.PLAYAGAIN;
+                case MAIN_MENU:
+                    fightState = FightState.PLAY_AGAIN;
                     break;
             }
         }
-        if (key == CODED && keyCode == RIGHT) {
+        if ((key == CODED && keyCode == RIGHT) || key == ENTER || key == RETURN) {
             switch (fightState) {
-                case PLAYAGAIN:
-                    if (gameState.equals(GameState.ONEPLAYER)) {
-                        gameState = GameState.ONEPLAYER;
+                case PLAY_AGAIN:
+                    if (gameState.equals(GameState.ONE_PLAYER)) {
+                        gameState = GameState.ONE_PLAYER;
                         onePlayerState = OnePlayerState.ROCK;
                         computerPlayer.setChoice();
-                        counter = 0;
+                        onePlayerCounter = 0;
                     }
-                    else if (gameState.equals(GameState.TWOPLAYERS)) {
-                        gameState = GameState.TWOPLAYERS;
-                        counter2 = 0;
+                    else if (gameState.equals(GameState.TWO_PLAYERS)) {
+                        gameState = GameState.TWO_PLAYERS;
+                        twoPlayerCounter = 0;
                         twoPlayerState = TwoPlayerState.WAIT;
                         onePlayerState = OnePlayerState.ROCK;
                     }
                     break;
-                case MAINMENU:
+                case MAIN_MENU:
                     setup();
                     break;
             }
         }
     }
 
-    public void onePlayerControls() {
+    private void onePlayerControls() {
         if (key == CODED && keyCode == UP) {
             switch (onePlayerState) {
                 case ROCK:
@@ -476,14 +478,14 @@ public class MainApp extends PApplet {
                     break;
             }
         }
-        if (key == CODED && keyCode == RIGHT) {
+        if ((key == CODED && keyCode == RIGHT) || key == ENTER || key == RETURN) {
             onePlayerState = OnePlayerState.FIGHT;
         }
     }
 
-    public void twoPlayerControls() {
+    private void twoPlayerControls() {
         if (key == 'S' || key == 's') {
-            counter2++;
+            twoPlayerCounter++;
         }
         if (key == 'Q' || key == 'q') {
             player1.setChoice(Choice.ROCK);
@@ -505,15 +507,15 @@ public class MainApp extends PApplet {
         }
     }
 
-    public void menuButton(String label, int y, boolean selected) {
+    private void menuButton(String label, int y, boolean selected) {
         gameButton(label, y, selected, ButtonPosition.CENTER);
     }
 
-    public void gameButton(String label, int y, boolean selected, boolean left) {
+    private void gameButton(String label, int y, boolean selected, boolean left) {
         gameButton(label, y, selected, left ? ButtonPosition.LEFT : ButtonPosition.RIGHT);
     }
 
-    public void gameButton(String label, int y, boolean selected, ButtonPosition buttonPosition) {
+    private void gameButton(String label, int y, boolean selected, ButtonPosition buttonPosition) {
         textAlign(CENTER);
         textFont(lazer84, 28);
         int x = 0;
@@ -540,7 +542,7 @@ public class MainApp extends PApplet {
         text(label, x + 30, y + 30);
     }
 
-    public void twoPlayerGameButton(String label, int y, boolean left, char key) {
+    private void twoPlayerGameButton(String label, int y, boolean left, char key) {
         gameButton(label, y, false, left);
         textFont(lazer84, 16);
         int x = left ? 100 : width - 60;
