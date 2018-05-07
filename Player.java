@@ -4,10 +4,20 @@ public class Player {
     private int points;
     private Choice choice;
     private boolean computer;
+    private String name;
 
-    Player(boolean computer) {
+    Player(String name, boolean computer) {
+        this.name = name;
         this.computer = computer;
         this.choice = Choice.ROCK;   //TODO: maybe don't do this
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Choice getChoice() {
