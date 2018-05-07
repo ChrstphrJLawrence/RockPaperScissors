@@ -262,19 +262,16 @@ public class MainApp extends PApplet {
                 gameButton("ROCK", 240, true, false);
                 gameButton("PAPER", 320, false, false);
                 gameButton("SCISSORS", 400, false, false);
-                computerPlayer.setChoice(Choice.ROCK);
             }
             else if (computerPlayer.getChoice().equals(Choice.PAPER)) {
                 gameButton("ROCK", 240, false, false);
                 gameButton("PAPER", 320, true, false);
                 gameButton("SCISSORS", 400, false, false);
-                computerPlayer.setChoice(Choice.PAPER);
             }
             else if (computerPlayer.getChoice().equals(Choice.SCISSORS)) {
                 gameButton("ROCK", 240, false, false);
                 gameButton("PAPER", 320, false, false);
                 gameButton("SCISSORS", 400, true, false);
-                computerPlayer.setChoice(Choice.SCISSORS);
             }
             if (onePlayerCounter > 35) {
                 computerPlayer.setChoice();
@@ -480,6 +477,7 @@ public class MainApp extends PApplet {
         }
         if ((key == CODED && keyCode == RIGHT) || key == ENTER || key == RETURN) {
             onePlayerState = OnePlayerState.FIGHT;
+            computerPlayer.setChoice();
         }
     }
 
@@ -532,7 +530,7 @@ public class MainApp extends PApplet {
         }
         if (selected) {
             red();
-            triangle(x - 25, y + 40, x + /*70*/ 50 + label.length() * 4, y, x + /*65*/45 + label.length() * 4, y + 35);
+            triangle(x - 25, y + 40, x + 50 + label.length() * 4, y, x + 45 + label.length() * 4, y + 35);
         }
         brightBlue();
         triangle(x - 25, y, x + 3, y + 53, x + 65 + label.length() * 5, y + 18);
